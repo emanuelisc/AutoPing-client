@@ -75,41 +75,9 @@ class Duomenys extends Component {
       <Header title={this.props.title} search={false} backIco="arrow-back" />
       <ScrollView>
         <View>
-          <Text style={styles.mainText}></Text>
-          <Text style={styles.kitasText}>Tikrai norite pašalinti visus duomenis iš duomenų serverio?</Text>
+          <Text style={styles.kitasText}>Change server address?</Text>
+          <Text style={{ textAlign: 'center', fontSize: 18 }}>App my not work with wrong address!</Text>
         </View>
-        {/* <CenterSection> */}
-        <View>
-      <TouchableOpacity onPress={this.userLogout.bind(this)}>
-            <Button 
-              onPress={this.userLogout.bind(this)} 
-              primary 
-              raised 
-              text="Taip"
-              style={{
-                container: styles.buttonContainer,
-                text: styles.buttonText
-              }}
-              />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.goBack.bind(this)}>
-            <Button 
-              onPress={this.goBack.bind(this)} 
-              default
-              raised
-              text="Ne"
-              style={{
-                container: styles.buttonContainerRed,
-                text: styles.buttonTextRed
-              }}
-            />
-            </TouchableOpacity>
-            </View>
-            <View>
-          <Text style={styles.kitasText}>Pakeisti duomenų serverio adresą?</Text>
-          <Text style={{ textAlign: 'center', fontSize: 18 }}>Dėl blogo adreso programėlė gali neveikti</Text>
-        </View>
-        {/* <CenterSection> */}
         <View>
           <TextInput 
               editable={true}
@@ -126,7 +94,7 @@ class Duomenys extends Component {
               onPress={this.saveAddress.bind(this)} 
               primary 
               raised 
-              text="Pakeisti"
+              text="Save"
               style={{
                 container: styles.buttonContainer,
                 text: styles.buttonText
@@ -134,30 +102,9 @@ class Duomenys extends Component {
               />
               </TouchableOpacity>
             </View>
-        {/* </CenterSection> */}
         </ScrollView>
 
-      
-      <BottomNavigation hidden={false} style={{position: 'absolute', left: 0, right: 0, bottom: 0}}>
-        <BottomNavigation.Action
-            key="today"
-            icon="today"
-            label="Pagrindinis"
-            // onPress={this.onPaieska.bind(this)}
-        />
-        <BottomNavigation.Action
-            key="people"
-            icon="people"
-            label="Pacientai"
-            onPress={this.onPaieska.bind(this)}
-        />
-        <BottomNavigation.Action
-            key="settings"
-            icon="settings"
-            label="Nustatymai"
-            onPress={this.onNustatymai.bind(this)}
-        />
-    </BottomNavigation>
+    
 
       </View>
     );
@@ -203,7 +150,8 @@ const styles = {
     marginBottom: 30,
     textAlign: 'center',
     marginLeft: 30, 
-    marginRight: 30
+    marginRight: 30,
+    marginTop: 60
   }
 };
 

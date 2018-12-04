@@ -100,7 +100,7 @@ class PacientoPaieska extends Component  {
         />
       <ScrollView>
       <SearchBar        
-        placeholder="Ieškoti čia"        
+        placeholder="Search"        
         lightTheme        
         round        
         onChangeText={text => this.searchFilterFunction(text)}

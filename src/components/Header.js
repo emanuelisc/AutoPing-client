@@ -17,7 +17,7 @@ class Header extends Component {
         rightElement={{
             menu: {
                 icon: "more-vert",
-                labels: ["Informacija", "DUK", "Privatumo Politika", "Praneškite apie klaidą"]
+                labels: ["Information", "FAQ", "Privacy Policy", "Found bug? Report!"]
             }
         }}
         onLeftElementPress={() => { this.onBack() }}

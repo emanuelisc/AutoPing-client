@@ -12,18 +12,15 @@ class MainWindow extends Component {
   }
 
   onNaujas() {
-    Actions.naujas();
-    this.setState({ active: 'today' });
+    Actions.newWeb();
   }
 
   onPaieska() {
-    Actions.pacientoPaieska();
-    this.setState({ active: 'people' });
+    Actions.webList();
   }
 
   onNustatymai() {
     Actions.nustatymai();
-    this.setState({ active: 'settings' });
   }
 
   render() {
@@ -32,13 +29,51 @@ class MainWindow extends Component {
       <Header title={this.props.title} search={false} />
       <ScrollView>
         <View>
-          <Text style={styles.mainText}>TPA</Text>
-          <Text style={styles.kitasText}>Sveiki atvyke!</Text>
+          <Text style={styles.mainText}>AutoPing</Text>
+          <Text style={styles.kitasText}>Welcome!</Text>
+          <Text style={styles.kitasText2}>To add website into tracking list, press a button bellow.</Text>
         </View>
         {/* <CenterSection> */}
-          <BigButton onPress={this.onNaujas.bind(this)}>Naujas Pacientas</BigButton>
-          <BigButton onPress={this.onPaieska.bind(this)}>Ieškoti</BigButton>
-          <BigButton onPress={this.onNustatymai.bind(this)}>Nustatymai</BigButton>
+          <Button 
+            raised 
+            primary 
+            onPress={this.onNaujas.bind(this)} 
+            text="Add new website" 
+            style={{
+              container: styles.buttonContainer,
+              text: styles.buttonText
+            }}
+          />
+          <Button 
+            raised 
+            default 
+            onPress={this.onPaieska.bind(this)} 
+            text="Website list" 
+            style={{
+              container: styles.buttonContainer,
+              text: styles.buttonText
+            }}
+          />
+          <Button 
+            raised 
+            default 
+            onPress={this.onPaieska.bind(this)} 
+            text="Statistics" 
+            style={{
+              container: styles.buttonContainer,
+              text: styles.buttonText
+            }}
+          />
+          <Button 
+            raised 
+            accent 
+            onPress={this.onNustatymai.bind(this)} 
+            text="Settings" 
+            style={{
+              container: styles.buttonContainer,
+              text: styles.buttonText
+            }}
+          />
         {/* </CenterSection> */}
         </ScrollView>
 
@@ -47,19 +82,19 @@ class MainWindow extends Component {
         <BottomNavigation.Action
             key="today"
             icon="today"
-            label="Pagrindinis"
+            label="Main"
             // onPress={this.onPaieska.bind(this)}
         />
         <BottomNavigation.Action
             key="people"
             icon="people"
-            label="Pacientai"
+            label="Statistics"
             onPress={this.onPaieska.bind(this)}
         />
         <BottomNavigation.Action
             key="settings"
             icon="settings"
-            label="Nustatymai"
+            label="Settings"
             onPress={this.onNustatymai.bind(this)}
         />
     </BottomNavigation>
@@ -79,9 +114,28 @@ const styles = {
   },
   kitasText: {
     fontSize: 26,
-    marginBottom: 30,
+    marginBottom: 15,
     textAlign: 'center'
+  },
+  kitasText2: {
+    fontSize: 20,
+    marginBottom: 30,
+    textAlign: 'center',
+    paddingLeft: 30,
+    paddingRight: 30
+  },
+  buttonText: {
+    fontSize: 18
+  },
+  buttonContainer: {
+    marginBottom: 15,
+    marginTop: 15,
+    paddingBottom: 25,
+    paddingTop: 25,
+    marginLeft: 100,
+    marginRight: 100
   }
-}
+};
+
 
 export default MainWindow;
