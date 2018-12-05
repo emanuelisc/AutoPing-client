@@ -1,5 +1,5 @@
 import React, { Component  } from 'react';
-import { Alert, TouchableWithoutFeedback, Text, View, ListView, ScrollView, ActivityIndicator, FlatList, AsyncStorage } from 'react-native';
+import { Alert, TouchableWithoutFeedback, TouchableOpacity, Text, View, ListView, ScrollView, ActivityIndicator, FlatList, AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { CenterSection, Card, CardSection, FullHeightCard, BigButton } from '../common'; 
 // import { ListItem } from 'react-native-material-ui';
@@ -58,18 +58,32 @@ class PacientoPaieska extends Component  {
     });
     
     AsyncStorage.getItem('token').then((token) => {
-      fetch(this.state.address + 'patients', {
+      fetch(this.state.address + 'urls', {
         method: 'GET',
-        headers: { 'Authorization': 'Bearer' + token }
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
       })
-      .then((response) => response.json())
+      // .then((response) => response.json())
+      .then((response) => {
+        // In this case, we check the content-type of the response
+        // console.log(response.headers.get('content-type'));
+        // if (response.headers.get('content-type').match(/application\/json/)) {
+          return response.json();
+        // }
+        // return response;
+        // You can also try "return response.text();"
+       })
       .then((datas) => {
-        this.setState({ data : datas.data });
-        this.arrayholder = datas.data;
-        console.log(datas.data);
+        console.log(datas);
+        this.setState({ data : datas });
+        this.arrayholder = datas;
+
       })
       .done();
     })
+  }
+
+  openWeb(){
+
   }
 
   renderRow(patient){
@@ -81,7 +95,7 @@ class PacientoPaieska extends Component  {
 
   searchFilterFunction = text => {    
     const newData = this.arrayholder.filter(item => {      
-      const itemData = `${item.name.toUpperCase()} ${item.surname.toUpperCase()}`;
+      const itemData = `${item.name.toUpperCase()} ${item.ip.toUpperCase()}`;
        const textData = text.toUpperCase();
         
        return itemData.indexOf(textData) > -1;    
@@ -110,13 +124,19 @@ class PacientoPaieska extends Component  {
         <FlatList          
           data={this.state.data}          
           renderItem={({ item }) => ( 
-            <ListItem              
-              roundAvatar              
-              title={`${item.name} ${item.surname}`}  
-              // subtitle={item.email}                           
-              // avatar={{ uri: item.picture.thumbnail }}   
-              containerStyle={{ borderBottomWidth: 0 }} 
-            />          
+            // <TouchableOpacity onPress={this.openWeb.bind(this)}>
+              <ListItem              
+                roundAvatar              
+                title={`${item.name} ${item.ip}`}  
+                // subtitle={item.email}                           
+                // avatar={{ uri: item.picture.thumbnail }}   
+                onPress={() => {
+                                    console.log(item.id);
+                  Actions.newWeb({ idText: item.id, nameText: item.name, descriptionText: item.description, intervalText: item.interval, ipText: item.ip, updateText: 1 });
+                }}
+                containerStyle={{ borderBottomWidth: 0 }} 
+              />          
+            // </TouchableOpacity>
           )}          
           keyExtractor={item => item.id.toString()}  
           ItemSeparatorComponent={this.renderSeparator} 

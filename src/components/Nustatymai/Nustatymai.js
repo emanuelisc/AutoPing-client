@@ -12,7 +12,7 @@ class Nustatymai extends Component {
   }
   
   onLogOut() {
-    Actions.atsijungti();
+    Actions.logout();
   }
 
   onPagrindinis() {

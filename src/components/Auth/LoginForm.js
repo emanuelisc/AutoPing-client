@@ -7,11 +7,15 @@ import { Actions } from 'react-native-router-flux';
 class LoginForm extends Component {
   constructor() {
     super();
-    this.state = { username: null, password: null, loading: false, error: '' };
+    this.state = { username: null, password: null, loading: false, error: '', address: null };
   }
 
   onRegister() {
     Actions.register();
+  }
+
+  loadServer() {
+    Actions.userver();
   }
 
   componentWillMount(){
@@ -138,6 +142,21 @@ class LoginForm extends Component {
             />
 
             {this.renderButton()}
+            <View>
+            <Text style={styles.questionText}>Need to change server address?</Text>
+            <TouchableOpacity onPress={this.userLogin.bind(this)}>
+            <Button 
+              onPress={this.loadServer.bind(this)} 
+              primary 
+              raised 
+              text="Change IP"
+              style={{
+                container: styles.buttonContainer,
+                text: styles.buttonText
+              }}
+              />
+              </TouchableOpacity>
+            </View>
           </View>
         </CenterSection>
       </FullHeightCard>

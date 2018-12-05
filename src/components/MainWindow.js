@@ -12,7 +12,7 @@ class MainWindow extends Component {
   }
 
   onNaujas() {
-    Actions.newWeb();
+    Actions.newWeb({ idText: "", nameText: "", descriptionText: "", intervalText: "", ip: "", updateText: 0  });
   }
 
   onPaieska() {

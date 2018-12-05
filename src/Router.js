@@ -18,11 +18,17 @@ const RouterComponent = () => {
   return (
     <Router>
       <Scene key="root" hideNavBar >
-        {/* <Scene key="auth">
+        <Scene key="auth">
           <Scene key="load" component={LoadingPage} title="Please Login" hideNavBar initial />
           <Scene key="login" component={LoginForm} title="Please Login" hideNavBar/>
           <Scene key="register" component={RegisterForm} title="Please Register" hideNavBar />
-        </Scene> */}
+          <Scene 
+              key="userver" 
+              component={Duomenys} 
+              title="Server settings" 
+              hideNavBar
+            />
+        </Scene>
         <Scene key="main">
           <Scene 
             // rightTitle="Nustatymai"

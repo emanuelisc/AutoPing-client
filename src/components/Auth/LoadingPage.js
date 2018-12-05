@@ -12,30 +12,32 @@ class LoadingPage extends Component {
 
   componentWillMount(){
     // AsyncStorage.removeItem('address');
-    // AsyncStorage.getItem('address').then((address) => {
-      // if(!address) {
-        // this.setState({ address: 'http://s2.shop4dev.com:2081/' });
-        // this.saveItem('address', this.state.address);
-        // this.saveItem('address', 'http://s2.shop4dev.com:2081/');
-    //   } else {
-    //     this.setState({ address: address });
-    //   }
-    // });
+    AsyncStorage.getItem('address').then((address) => {
+      if(!address) {
+        this.setState({ address: 'http://192.168.0.147:80/' });
+        this.saveItem('address', this.state.address);
+        // this.saveItem('address', 'http://192.168.0.147:80');
+      } else {
+        this.setState({ address: address });
+      }
+    });
 
 
-    this.setState({ address: 'http://192.168.0.131:80/' });
-    this.saveItem('address', 'http://192.168.0.131:80/');
+    // this.setState({ address: 'http://192.168.0.147:80/' });
+    // this.saveItem('address', 'http://192.168.0.147:80/');
   }
 
   componentDidMount() {                   
     console.log('load');
     AsyncStorage.getItem('username').then((username) => {
+      // console.log(username);
       if(!username) {
         Actions.login();
       } else {
         AsyncStorage.getItem('password').then((password) => {
+          // console.log(password);
           body = JSON.stringify({
-            email: username,
+            username: username,
             password: password,
           })
           fetch(this.state.address + 'authenticate', {

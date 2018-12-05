@@ -31,10 +31,10 @@ class Pabaiga extends Component {
     AsyncStorage.getItem('token').then((token) => {
       fetch(this.state.address + 'patient', {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer' + token },
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({
-          name: this.state.vardas,
-          surname: this.state.surname,
+          ip: this.state.vardas,
+          name: this.state.surname,
           email: this.state.email,
           year: this.state.year
         })
@@ -43,7 +43,7 @@ class Pabaiga extends Component {
         if (response.ok) {
           return response;
         } else {
-          Alert.alert('Blogi duomenys!');
+          Alert.alert('Bad data!');
           this.setState({ error: '', loading: false })
           // Actions.register();
         }
@@ -51,21 +51,13 @@ class Pabaiga extends Component {
       .then((response) => response.json())
       .then((responseData) => {
         this.setState({ error: '', loading: false })
-        Alert.alert('Paciento duomenys išsaugoti!'),
+        Alert.alert('Website has been saved!'),
         Actions.main();
       })
       .catch(() => {
-        Alert.alert('Blogi duomenys!');
+        Alert.alert('Bad data!');
       });
     });
-  }
-
-  async saveItem(item, selectedValue) {
-    try {
-      await AsyncStorage.setItem(item, selectedValue);
-    } catch (error) {
-      console.error('AsyncStorage error: ' + error.message);
-    }
   }
 
   render () {

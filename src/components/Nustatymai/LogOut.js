@@ -19,7 +19,7 @@ class LogOut extends Component {
       await AsyncStorage.removeItem('password');
       await AsyncStorage.removeItem('name');
       await AsyncStorage.removeItem('surname');
-      Alert.alert('Sėkmingai atsijungėte!');
+      Alert.alert('Success!');
       Actions.auth();
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
@@ -86,7 +86,7 @@ class LogOut extends Component {
       <ScrollView>
         <View>
           <Text style={styles.mainText}></Text>
-          <Text style={styles.kitasText}>Tikrai norite atsijungti?</Text>
+          <Text style={styles.kitasText}>Do you really want to log out?</Text>
         </View>
         {/* <CenterSection> */}
         <View>
@@ -95,7 +95,7 @@ class LogOut extends Component {
               onPress={this.userLogout.bind(this)} 
               primary 
               raised 
-              text="Taip"
+              text="Yes"
               style={{
                 container: styles.buttonContainer,
                 text: styles.buttonText
@@ -107,7 +107,7 @@ class LogOut extends Component {
               onPress={this.goBack.bind(this)} 
               default
               raised
-              text="Ne"
+              text="No"
               style={{
                 container: styles.buttonContainerRed,
                 text: styles.buttonTextRed
@@ -117,28 +117,6 @@ class LogOut extends Component {
             </View>
         {/* </CenterSection> */}
         </ScrollView>
-
-      
-      <BottomNavigation hidden={false} style={{position: 'absolute', left: 0, right: 0, bottom: 0}}>
-        <BottomNavigation.Action
-            key="today"
-            icon="today"
-            label="Pagrindinis"
-            // onPress={this.onPaieska.bind(this)}
-        />
-        <BottomNavigation.Action
-            key="people"
-            icon="people"
-            label="Pacientai"
-            onPress={this.onPaieska.bind(this)}
-        />
-        <BottomNavigation.Action
-            key="settings"
-            icon="settings"
-            label="Nustatymai"
-            onPress={this.onNustatymai.bind(this)}
-        />
-    </BottomNavigation>
 
       </View>
     );

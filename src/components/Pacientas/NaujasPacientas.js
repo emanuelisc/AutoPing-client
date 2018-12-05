@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView, Text, View, ScrollView, Picker, Switch } from 'react-native';
+import { ListView, Text, View, ScrollView, Picker, Switch, AsyncStorage, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { CenterSection, CardSection, FullHeightCard, Card, BigButton, Button, Input } from '../common'; 
 import { BottomNavigation } from 'react-native-material-ui';
@@ -9,11 +9,7 @@ class NaujasPacientas extends Component {
 
   constructor() {
     super();
-    this.state = { vardas: null, surname: null, year: null, email: null, loading: false, laik: 0,  error: '' };
-  }
-
-  onButtonPress() {
-    Actions.lygis1({ vardas : this.state.vardas, surname : this.state.surname, year : this.state.year, email : this.state.email });
+    this.state = { name: null, id: null, ip: null, description: null, interval: "5", id: null, loading: false, laik: 0,  error: '', update: 0 };
   }
 
   onPagrindinis() {
@@ -24,11 +20,151 @@ class NaujasPacientas extends Component {
     Actions.pacientoPaieska();
     this.setState({ active: 'people' });
   }
-
+ 
   onNustatymai() {
     Actions.nustatymai();
     this.setState({ active: 'settings' });
   }
+
+  componentWillMount() {
+
+    this.setState({ name : this.props.nameText, description : this.props.descriptionText, ip : this.props.ipText, id : this.props.idText, interval : this.props.intervalText, update: this.props.updateText })
+
+    AsyncStorage.getItem('address').then((address) => {
+      if(!address) {
+        this.setState({ address: 'https://tpa.shop4dev.com/api/' });
+
+      } else {
+        this.setState({ address: address });
+      }
+    });
+  //this.setState({ vardas : this.props.vardas, surname : this.props.surname, year : this.props.year, email : this.props.email })
+}
+
+
+addPatient() {
+  this.setState({ error: '', loading: true })
+  AsyncStorage.getItem('token').then((token) => {
+    if(this.state.update === 0) {
+      console.log('Add Patient');
+      this.addFunction(token);
+    } else {
+      console.log('Update Patient');
+      this.updateFunction(token);
+    }
+  });
+}
+
+updateFunction(token){
+  fetch(this.state.address + 'urls/' + this.state.id, {
+    method: 'PUT',
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({
+      name: this.state.name,
+      ip: this.state.ip,
+      description: this.state.description,
+      interval: this.state.interval
+    })
+  })
+  .then((response) => {
+    if (response.ok) {
+      return response;
+    } else {
+      Alert.alert('Bad Data!');
+      this.setState({ error: '', loading: false })
+      // Actions.register();
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    this.setState({ error: '', loading: false })
+    Alert.alert('Website Updated!'),
+    Actions.webList();
+  })
+  .catch(() => {
+    Alert.alert('Bad Data!');
+  });
+}
+
+addFunction(token){
+  fetch(this.state.address + 'urls', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({
+      name: this.state.name,
+      ip: this.state.ip,
+      description: this.state.description,
+      interval: this.state.interval
+    })
+  })
+  .then((response) => {
+    // console.log(response);
+    if (response.status === 201) {
+      return response;
+    } else {
+      Alert.alert('Bad Data!');
+      this.setState({ error: '', loading: false })
+      // Actions.register();
+    }
+  })
+  .then((response) => response.json())
+  .then((responseData) => {
+    this.setState({ error: '', loading: false })
+    Alert.alert('Website added!'),
+    Actions.webList();
+  })
+  .catch(() => {
+    Alert.alert('Bad Data!');
+  });
+}
+
+deleteUrl(){
+  this.setState({ error: '', loading: true })
+  AsyncStorage.getItem('token').then((token) => {
+      console.log('Add Patient');
+      fetch(this.state.address + 'urls/' + this.state.id, {
+        method: 'DELETE',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 204) {
+          this.setState({ error: '', loading: false })
+          Alert.alert('Website deleted!'),
+          Actions.webList();
+        } else {
+          Alert.alert('Bad Data!');
+          this.setState({ error: '', loading: false })
+          // Actions.register();
+        }
+      })
+      .catch(() => {
+        Alert.alert('Bad Data!');
+      });
+  });
+}
+
+deleteButton(){
+  if(this.state.update === 1) {
+    return (
+      <CardSection style={{ paddingBottom: 15, paddingTop: 30 }}>
+        <Button onPress={this.deleteUrl.bind(this)} >
+          Delete Website
+        </Button>
+      </CardSection>
+    );
+  } else {
+    return;
+  }
+}
+
+async saveItem(item, selectedValue) {
+  try {
+    await AsyncStorage.setItem(item, selectedValue);
+  } catch (error) {
+    console.error('AsyncStorage error: ' + error.message);
+  }
+}
 
 
   render() {
@@ -45,8 +181,8 @@ class NaujasPacientas extends Component {
               <Input
                 label="Name"
                 placeholder="name"
-                value={this.state.vardas}
-                onChangeText={(vardas) => this.setState({vardas})}
+                value={this.state.name}
+                onChangeText={(name) => this.setState({name})}
                 // onChangeText={value => this.props.employeeUpdate({ prop: 'name', value })}
               />
             </CardSection>
@@ -54,17 +190,26 @@ class NaujasPacientas extends Component {
             <Input
                 label="Address"
                 placeholder="address or ip"
-                value={this.state.surname}
-                onChangeText={(surname) => this.setState({surname})}
+                value={this.state.ip}
+                onChangeText={(ip) => this.setState({ip})}
+                // onChangeText={text => this.props.employeeUpdate({ prop: 'phone', value: text })}
+              />
+            </CardSection>
+            <CardSection>
+            <Input
+                label="Description"
+                placeholder="short description"
+                value={this.state.description}
+                onChangeText={(description) => this.setState({description})}
                 // onChangeText={text => this.props.employeeUpdate({ prop: 'phone', value: text })}
               />
             </CardSection>
             <CardSection>
             <Text style={styles.labelStyle}>Time between ping's in minutes</Text>
               <Picker
-                selectedValue={this.state.laik}
+                selectedValue={this.state.interval}
                 style={styles.inputStyle}
-                onValueChange={(itemValue, itemIndex) => this.setState({laik: itemValue})}
+                onValueChange={(itemValue, itemIndex) => this.setState({interval: itemValue})}
                 mode='dropdown'
               >
                 <Picker.Item label="5" value="5" />
@@ -87,10 +232,11 @@ class NaujasPacientas extends Component {
 
             </CardSection>
             <CardSection style={{ paddingBottom: 15, paddingTop: 30 }}>
-            <Button onPress={this.onButtonPress.bind(this)} >
+            <Button onPress={this.addPatient.bind(this)} >
                 Save Website
               </Button>
               </CardSection>
+                {this.deleteButton()}
           </Card>
 
         </ScrollView>

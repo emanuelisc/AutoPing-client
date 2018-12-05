@@ -63,24 +63,23 @@ class RegisterForm extends Component {
   userSignup() {
     this.setState({ error: '', loading: true })
     console.log('signup');
-    if (!this.state.username || !this.state.password) return;
+    if (!this.state.username || !this.state.password || !this.state.password_confirmation) return;
     fetch(this.state.address + 'users', {
       method: 'POST',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: this.state.name,
-        surname: this.state.surname,
-        email: this.state.username,
-        activation_code: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
-        password: this.state.password,
-        password_confirmation: this.state.password_confirmation,
+        username: this.state.username,
+        password: this.state.password
       })
     })
     .then((response) => {
-      if (response.ok) {
+      if (response.status === 201) {
         return response;
+      } else if (response.status == 409){
+        Alert.alert('User already exists!', response.status.toString());
+        this.setState({ error: '', loading: false })
       } else {
-        Alert.alert('Bad credentials!');
+        Alert.alert('Bad credentials!', response.status.toString());
         this.setState({ error: '', loading: false })
         // Actions.register();
       }
